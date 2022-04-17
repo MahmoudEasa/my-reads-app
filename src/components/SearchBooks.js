@@ -22,12 +22,6 @@ class SearchBooks extends Component {
   }
   bookShelf(book, shelf) {
     BooksAPI.update(book, shelf)
-    .then(() => {
-      return (
-        shelf !== "none" ? alert(`${book.title} has been added to your shelf!`) : null
-      )
-    })
-    .catch(() => alert("Something went worng! Please try again!"));
   }
 
   searchResoults() {
@@ -49,20 +43,22 @@ class SearchBooks extends Component {
 
   render() {
     return (
-      <div className="search-books">
-        <div className="search-books-bar">
-          <Link to='/' className="close-search">Close</Link>
-          <div className="search-books-input-wrapper">
-            <input type="text"
-                    placeholder="Search by title or author"
-                    value={this.state.query}
-                    onChange={e => this.upeateQuery(e.target.value)}
-            />
+      <div className="search-books-results">
+        <div className="search-books">
+          <div className="search-books-bar">
+            <Link to='/' className="close-search">Close</Link>
+            <div className="search-books-input-wrapper">
+              <input type="text"
+                      placeholder="Search by title or author"
+                      value={this.state.query}
+                      onChange={e => this.upeateQuery(e.target.value)}
+              />
+            </div>
           </div>
+          <ol className="books-grid">
+            {this.searchResoults()}
+          </ol>
         </div>
-        <ol className="books-grid">
-          {this.searchResoults()}
-        </ol>
       </div>
     )
   }

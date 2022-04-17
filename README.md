@@ -4,12 +4,13 @@ This is the final evaluation project for Udacity's React Fundamentals course. Co
 
 ## Run the project
 
-Clone project `$ git clone https://github.com/MahmoudEasa/my-reads-app.git`
+Clone Project `$ git clone https://github.com/MahmoudEasa/my-reads-app.git`
+Go To The Project Directory `$ cd my-reads-app`
 
 ### To run the project:
 
-- Run `npm install`
-- start the project server with `npm start`
+- Install npm to Run App `npm install`
+- Start the project server with `npm start`
 
 ## Important
 
