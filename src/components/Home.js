@@ -1,92 +1,53 @@
-import React, { Component } from 'react'
-import escapeStringRegexp from 'escape-string-regexp';
+import React from "react";
+import PropTypes from "prop-types";
+import Shelf from "./Shelf";
+import AddBook from "./AddBook";
 
-import AddBook from './AddBook'
-import * as BooksAPI from '../BooksAPI'
-import Book from './Book';
+const Home = (props) => {
+  const handleBookShelfChange = (book, shelf) => {
+    props.onBookShelfChange(book, shelf);
+  };
 
-class Sections extends Component {
-  state = {
-    currentlyReading: [],
-    wantToRead: [],
-    read: [],
-  }
-  componentDidMount() {
-    this.getBooks();
-  }
-
-  getBooks() {
-    BooksAPI.getAll()
-    .then(books => {
-      // Currently Reading
-      const matchCurrentlyReading = new RegExp(escapeStringRegexp("currentlyReading"));
-      let currentlyReading = books ? books.filter(book => {
-        return matchCurrentlyReading.test(book.shelf)
-      }) : null;
-  
-      // Want To Read
-      const matchWantToRead = new RegExp(escapeStringRegexp("wantToRead"));
-      let wantToRead = books ? books.filter(book => {
-        return matchWantToRead.test(book.shelf)
-      }) : null;
-  
-      // Read
-      const matchRead = new RegExp(escapeStringRegexp("read"));
-      let read = books ? books.filter(book => {
-        return matchRead.test(book.shelf)
-      }) : null;
-  
-      this.setState({currentlyReading, wantToRead, read})
-    })
-    .catch(err => {console.log(err)})
-  }
-
-  bookShelf(book, shelf) {
-    BooksAPI.update(book, shelf).then(() => this.getBooks());
-  }
-
-  renderShelf(books, title) {
-    return (
-      <div className="bookshelf">
-        <h2 className="bookshelf-title">{title}</h2>
-        <div className="bookshelf-books">
-          <ol className="books-grid">
-            {books.map((book, index) =>
-            <Book
-              key={index}
-              book={book}
-              bookShelf={this.bookShelf.bind(this)}
-            />)}
-          </ol>
+  return (
+    <div className="app">
+      <div className="list-books">
+        {/* Nav Bar */}
+        <div className="list-books-title">
+          <h1>MyReads</h1>
         </div>
-      </div>
-    )
-  }
-  render() {
-    const { currentlyReading, wantToRead, read } = this.state;
-    return (
-      <div className="app">
-        <div className="list-books">
-
-          {/* Nav Bar */}
-          <div className="list-books-title">
-            <h1>MyReads</h1>
+        <div className="list-books-content">
+          <div>
+            <Shelf
+              title="Currently Reading"
+              cat="currentlyReading"
+              books={props.books.filter(
+                (bs) => bs.shelf === "currentlyReading"
+              )}
+              onBookShelfChange={handleBookShelfChange}
+            />
+            <Shelf
+              title="Want to Read"
+              cat="wantToRead"
+              books={props.books.filter((bs) => bs.shelf === "wantToRead")}
+              onBookShelfChange={handleBookShelfChange}
+            />
+            <Shelf
+              title="Read"
+              cat="read"
+              books={props.books.filter((bs) => bs.shelf === "read")}
+              onBookShelfChange={handleBookShelfChange}
+            />
           </div>
-
-          {/* Main Sections */}
-          <div className="list-books-content">
-            <div>
-              {this.renderShelf(currentlyReading, 'Currently Reading')}
-              {this.renderShelf(wantToRead, 'Want to Read')}
-              {this.renderShelf(read, 'Read')}
-            </div>
-          </div>
-            {/* Open Search */}
-            <AddBook />
         </div>
+        <AddBook />
       </div>
-    )
-  }
-}
+    </div>
+  );
+};
 
-export default Sections
+Home.propTypes = {
+  books: PropTypes.array.isRequired,
+  onBookShelfChange: PropTypes.func.isRequired,
+};
+
+export default Home;
